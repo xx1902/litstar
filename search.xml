@@ -13,14 +13,14 @@
       
       <categories>
           
-          <category> blog </category>
+          <category> 随笔 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> blog </tag>
+            <tag> 随笔 </tag>
             
         </tags>
       
@@ -29,23 +29,23 @@
     
     
     <entry>
-      <title>这是一篇用来测试的文章</title>
+      <title>好用的网页工具汇集</title>
       <link href="/litstar/5c2fafc7.html"/>
       <url>/litstar/5c2fafc7.html</url>
       
-        <content type="html"><![CDATA[<h2 id="这是测试"><a href="#这是测试" class="headerlink" title="这是测试"></a>这是测试</h2>]]></content>
+        <content type="html"><![CDATA[<h3 id="免费工具链接汇集"><a href="#免费工具链接汇集" class="headerlink" title="免费工具链接汇集"></a>免费工具链接汇集</h3><p>常用表情：<a href="https://www.emojiall.com/zh-hans/list">📖 Emoji列表 | EmojiAll</a></p><p>矢量图库：<a href="https://www.iconfont.cn/">iconfont-阿里巴巴矢量图标库</a></p><p>好看壁纸：<a href="http://www.netbian.com/2kdongman/index_26.htm">2k动漫高清壁纸 (netbian.com)</a></p><p>文件转换：<a href="https://www.ilovepdf.com/zh-cn/pdf_to_powerpoint">在几秒内将你的 PDF 转换为 PPT 和 PPTX 文件 (ilovepdf.com)</a></p>]]></content>
       
       
       <categories>
           
-          <category> blog </category>
+          <category> tool </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> blog </tag>
+            <tag> tool </tag>
             
         </tags>
       
