@@ -4,27 +4,23 @@
   
     
     <entry>
-      <title>第一篇文章</title>
-      <link href="/litstar/5c2fafc7.html"/>
-      <url>/litstar/5c2fafc7.html</url>
+      <title>为什么要写blog</title>
+      <link href="/litstar/4a17b156.html"/>
+      <url>/litstar/4a17b156.html</url>
       
-        <content type="html"><![CDATA[<h2 id="这是第一篇文章"><a href="#这是第一篇文章" class="headerlink" title="这是第一篇文章"></a>这是第一篇文章</h2>]]></content>
+        <content type="html"><![CDATA[<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>前一段时间刚刚参与了助学导师 <del>为爱发电</del> 看到一群群刚从高中跑出来到处问问题的小白，朝气蓬勃的， 才发现自己不知不觉已经成为 <del>老登</del> 老白了。到了大学最焦虑的大三，回头望去自己经历了很多也学了很多，班长，学委，科协，暑期优秀团队，acm，q机器人，数学建模，大创，课设 <del>无头苍蝇到处乱撞</del> …… </p><ul><li>大一是无忧无虑的</li><li>大二是忙忙碌碌的</li><li>大三是<del>浑浑噩噩的</del> ？</li><li>大四是 （ ？</li></ul><p>不知道现在该学什么的我，找了我的老部长xc交流 <del>老迷妹了</del>，和我说了很多很多，当时说整理，到现在还没整理（悲   <del>我一定会整理的</del></p> <img src="../images/article/xc建议.png" alt="alt text" style="zoom: 33%;" /><p>最终产生了这篇文章  <del>属于亚马孙的蝴蝶效应了</del></p><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>前两天参与写的 <a href="https://github.com/Avoidman2233/GUIDE-FOR-FRESHMAN-IN-Hohai-University">《hhu盗版指南》</a>再次让我体验到写文章的 <del>快乐</del> ，很耗时间 但是 写完确实很充实，大三老年人还有时间吗， <del>好想回到高考后（bushi</del></p><p>经过两天的搭建和美化，Hexo + github +zeabur部署，小站终于暂时能看了<del>（虽然还有很多bug</del>，原本第一篇文章想写 如何搭建的，等以后有时间再写吧<del>（我有拖延症</del></p><p>接下来就在此站记录以后我的项目了，以此为证（）</p>]]></content>
       
       
       <categories>
           
-          <category> text1 </category>
+          <category> blog </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> t1 </tag>
-            
-            <tag> t2 </tag>
-            
-            <tag> t3 </tag>
+            <tag> blog </tag>
             
         </tags>
       
@@ -33,13 +29,25 @@
     
     
     <entry>
-      <title>Hello World</title>
-      <link href="/litstar/4a17b156.html"/>
-      <url>/litstar/4a17b156.html</url>
+      <title>这是一篇用来测试的文章</title>
+      <link href="/litstar/5c2fafc7.html"/>
+      <url>/litstar/5c2fafc7.html</url>
       
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+        <content type="html"><![CDATA[<h2 id="这是测试"><a href="#这是测试" class="headerlink" title="这是测试"></a>这是测试</h2>]]></content>
       
       
+      <categories>
+          
+          <category> blog </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> blog </tag>
+            
+        </tags>
       
     </entry>
     
