@@ -3,7 +3,7 @@ $.ajax({
     type: 'get',
     url: 'https://apis.map.qq.com/ws/location/v1/ip',
     data: {
-        key: 'ILXBZ-EV2WJ-TBXFN-DMH6O-BEW5K-4VFP3',
+        key: 'TW7BZ-ZT33Q-KDW5F-4FR4W-G2MZV-B3FQ5',
         output: 'jsonp',
     },
     dataType: 'jsonp',
@@ -28,7 +28,7 @@ function getDistance(e1, n1, e2, n2) {
 }
 
 function showWelcome() {
-
+    // 本站地理位置
     let dist = getDistance(118.7853, 31.9522, ipLoacation.result.location.lng, ipLoacation.result.location.lat); //这里换成自己的经纬度
     let pos = ipLoacation.result.ad_info.nation;
     let ip;
@@ -93,7 +93,7 @@ function showWelcome() {
                 case "江苏省":
                     switch (ipLoacation.result.ad_info.city) {
                         case "南京市":
-                            posdesc = "这是我挺想去的城市啦。";
+                            posdesc = "这是我大学的城市啦。";
                             break;
                         case "苏州市":
                             posdesc = "上有天堂，下有苏杭。";
