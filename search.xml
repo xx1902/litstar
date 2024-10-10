@@ -4,12 +4,74 @@
   
     
     <entry>
+      <title>TinyML and Efficient Deep Learning Computing</title>
+      <link href="/litstar/27af6670.html"/>
+      <url>/litstar/27af6670.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 机器学习 </category>
+          
+          <category> 深度学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> TingML </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>动手学深度学习V2</title>
+      <link href="/litstar/9aaf6e2.html"/>
+      <url>/litstar/9aaf6e2.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="深度学习介绍"><a href="#深度学习介绍" class="headerlink" title="深度学习介绍"></a>深度学习介绍</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>／ ￣￣￣￣ ＼　<br>|　乀 　√ \　 ／￣￣￣￣﹉￣＼<br>|　 👁 👁 | | 妈耶，李沐的 <br> \　 &#x2F; 👄\ &#x2F; ∠ 动手学深度学习! &#x2F;<br> ＼　　 イ 　 \ ______ &#x2F;<br> ／　　 　<br> &#x2F;　|　　　 \<br>|　|　　　 |   |</p><p><strong>学习深度学习关键是动手</strong></p><ul><li>深度学习是人工智能最热的领域</li><li>核心是神经网络</li><li>神经网络是一门语言</li><li>应该像学习Python&#x2F;C++一样学习深度学习</li></ul><p>中文网页书</p><ul><li><a href="https://zh.d2l.ai/chapter_preface/index.html">前言 — 动手学深度学习 2.0.0 documentation (d2l.ai)</a></li></ul><p>Github项目</p><ul><li><a href="https://github.com/d2l-ai/d2l-zh">d2l-ai&#x2F;d2l-zh: 《动手学深度学习》：面向中文读者、能运行、可讨论。中英文版被70多个国家的500多所大学用于教学。 (github.com)</a></li></ul><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>介绍深度学习经典和最新模型</p><ul><li>LeNet,ResNet,LSTM,BERT,..</li></ul><p>机器学习基础</p><ul><li>损失函数、目标函数、过拟合、优化</li></ul><p>实践</p><ul><li><p>使用Pytorch实现介绍的知识点</p></li><li><p>在真实数据上体验算法效果</p></li></ul><p>内容</p><ul><li>深度学习基础一线性神经网络，多层感知机</li><li>卷积神经网络一LeNet,AlexNet,.VGG,Inception,ResNet   （空间）</li><li>循环神经网络一RNN,GRU,LSTM,Seq2seq   （时间）</li><li>注意力制-Attention, Transformer</li><li>优化算法一SGD,Momentum,Adam</li><li>高性能计算一并行，多GPU,分布式</li><li>计算机视觉一目标检测，语义分割</li><li>自然语言处理一词嵌入，BERT</li></ul> <img src="C:/Users/17363/AppData/Roaming/Typora/typora-user-images/image-20241010170003894.png" alt="image-20241010170003894" style="zoom:50%;" /><p>图片分类、物体检测和分割、样式迁移、人脸合成、文字生成图片、文字生成、五人驾驶</p> <img src="C:/Users/17363/AppData/Roaming/Typora/typora-user-images/image-20241010170419510.png" alt="image-20241010170419510" style="zoom:50%;" /><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装miniconda&#x2F;conda后</p><p><code>conda env remove d2l-zh</code>   删除原本的d21-zh环境<br><code>conda create -n d2l-zh python=3.8 pip</code> 创建新的d21-zh环境<br><code>conda activate d2l-zh</code> 激活d21-zh环境</p><p>安装需要的包  注意换镜像源<br><code>pip install jupyter d2l torch torchvision</code></p><p>Windows 下载资料</p><p><a href="https://zh.d2l.ai/chapter_installation/index.html">安装 — 动手学深度学习 2.0.0 documentation (d2l.ai)</a></p><h2 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h2><p><strong>N维数组是机器学习和神经网络的主要数据结构</strong></p><p>2d：一行一个样本，一列一个特征</p><p>3d：RGB团偏（宽 高 通道）</p><p>4d：一个RGB图片的批量 一次读取128张图片</p><p>5d：一个视频批量  （多了时间）</p><p><strong>创建数组</strong></p><ul><li>形状  -&gt; 3*4 矩阵</li><li>数据类型  -&gt; 浮点数等</li><li>元素的值</li></ul><p><strong>访问元素</strong></p><p>一行 [1, : ]   一列[: ,1]   [l:r:step] 左闭右开</p><hr><p><strong>因为涉及到代码的运行，接下来的笔记在Jupyter中写，放在github库中</strong></p><p>笔记链接：<a href="https://github.com/xx1902/d2l">xx1902&#x2F;d2l: 动手学深度学习v2 (github.com)</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 深度学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>这是加密文章</title>
       <link href="/litstar/8d86dbc1.html"/>
       <url>/litstar/8d86dbc1.html</url>
       
         <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试." data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容.">  <script id="hbeData" type="hbeData" data-hmacdigest="9fe70399da77e743e5e9ae3a9d025f5ab776728020b9f39f5479f79d87d4b6c4">5ad6f12fcb346c1b5255c2a3344fe8912b7545fe1a37182a1bc162fcc897a1d7296271216b4f98e96627b6911f7c301b56b66cf544e74db5df7c2d6bca5e94ea9f4a71503fb7716f9bbc418c11a29028eb585f2658ddc68ea081a0d7631cbc665ca91faf5f70b5ab79f5307e3a10782183c5aafabed85183e6cd9eafa7c045fc3d53259e8d3dc827ad31d4f453247de28d0ef66f9d56b425b4f905c566d087b285f583e23aef191d3cfd65e3cb4394dd7c1cffec795399b79b089570dac9bef2b7a1ef27775f78a593a5802a1f90757fab39a49567ea5590c358a5b3c3c754a8e1a8a81a27345bc12d259f50580b6b1624ff7f0eca55706daa033f989732e4db01625ff7f23b4bd3b63b7d84302f07c5b91b76ce9b0e900176883af7d5d05e309214b58f913ced323aa0948b13cda57c</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-up">      <input class="hbe hbe-input-field hbe-input-field-up" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-up" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-up">您好, 这里需要密码.</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
       
+      
+      <categories>
+          
+          <category> 加密文章 </category>
+          
+      </categories>
       
       
         <tags>
@@ -27,7 +89,7 @@
       <link href="/litstar/4a17b156.html"/>
       <url>/litstar/4a17b156.html</url>
       
-        <content type="html"><![CDATA[<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>前一段时间刚刚参与了助学导师 <del>为爱发电</del> 看到一群群刚从高中跑出来到处问问题的小白，朝气蓬勃的， 才发现自己不知不觉已经成为 <del>老登</del> 老白了。到了大学最焦虑的大三，回头望去自己经历了很多也学了很多，班长，学委，科协，暑期优秀团队，acm，q机器人，数学建模，大创，课设 <del>无头苍蝇到处乱撞</del> …… </p><ul><li>大一是无忧无虑的</li><li>大二是忙忙碌碌的</li><li>大三是<del>浑浑噩噩的</del> ？</li><li>大四是 （ ？</li></ul><p>不知道现在该学什么的我，找了我的老部长xc交流 <del>老迷妹了</del>，和我说了很多很多，当时说整理，到现在还没整理（悲   <del>我一定会整理的</del></p> <img src="../images/article/xc建议.png" alt="alt text" style="zoom: 33%;" /><p>最终产生了这篇文章  <del>属于亚马孙的蝴蝶效应了</del></p><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>前两天参与写的 <a href="https://github.com/Avoidman2233/GUIDE-FOR-FRESHMAN-IN-Hohai-University">《hhu盗版指南》</a>再次让我体验到写文章的 <del>快乐</del> ，很耗时间 但是 写完确实很充实，大三老年人还有时间吗， <del>好想回到高考后（bushi</del></p><p>经过两天的搭建和美化，Hexo + github +zeabur部署，小站终于暂时能看了<del>（虽然还有很多bug</del>，原本第一篇文章想写 如何搭建的，等以后有时间再写吧<del>（我有拖延症</del></p><p>接下来就在此站记录以后我的项目了，以此为证（） </p>]]></content>
+        <content type="html"><![CDATA[<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>前一段时间刚刚参与了助学导师 <del>为爱发电</del> 看到一群群刚从高中跑出来到处问问题的小白，朝气蓬勃的， 才发现自己不知不觉已经成为 <del>老登</del> 老白了。到了大学最焦虑的大三，回头望去自己经历了很多也学了很多，班长，学委，科协，暑期优秀团队，acm，q机器人，数学建模，大创，课设 <del>无头苍蝇到处乱撞</del> …… </p><ul><li>大一是无忧无虑的</li><li>大二是忙忙碌碌的</li><li>大三是<del>浑浑噩噩的</del> ？</li><li>大四是 （ ？</li></ul><p>不知道现在该学什么的我，找了我的老部长xc交流 <del>老迷妹了</del>，和我说了很多很多，当时说整理，到现在还没整理（悲   <del>我一定会整理的</del></p> <img src="../images/article/xc建议.png" alt="alt text" style="zoom: 33%;" /><p>最终产生了这篇文章  <del>属于亚马孙的蝴蝶效应了</del></p><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>前两天参与写的 <a href="https://github.com/Avoidman2233/GUIDE-FOR-FRESHMAN-IN-Hohai-University">《hhu盗版指南》</a>再次让我体验到写文章的 <del>快乐</del> ，很耗时间 但是 写完确实很充实，大三老年人还有时间吗， <del>好想回到高考后（bushi</del></p><p>经过两天的搭建和美化，Hexo + github +zeabur部署，小站终于暂时能看了<del>（虽然还有很多bug</del>，原本第一篇文章想写 如何搭建的，等以后有时间再写吧<del>（我有拖延症</del></p><p>接下来就在此站记录以后我的项目了，以此为证（）</p>]]></content>
       
       
       <categories>
