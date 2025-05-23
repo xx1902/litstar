@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>TinyML第1部分笔记</title>
+      <link href="/litstar/blog/357b0867.html"/>
+      <url>/litstar/blog/357b0867.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h2><p>剪枝和稀疏性</p><p>量化</p><ul><li>整数量化</li><li>PR4</li><li>PR8</li></ul><p>神经网络架构搜索</p><p>知识蒸馏</p><ul><li>如何利用较大的网络来训练较小的网络</li></ul><p>运用所有技术</p><ul><li>MCUnet和TinyEngine将神经网络适配到微控制器中</li></ul><h3 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h3><blockquote><p>从硬件角度：内存很贵但是计算便宜的多 -&gt; 数据移动比算数计算多两个数量级</p><p>所以：减少内存量，减少模型大小，减少激活大小</p></blockquote><p>MLperf基准测试</p><ul><li>测试延迟和吞吐量性能</li><li>类别<ul><li>开放组：可以自由更改神经网络，剪枝等技术</li><li>封闭组：不能改变神经网络，只能用量化技术</li></ul></li></ul><h4 id="剪枝技术"><a href="#剪枝技术" class="headerlink" title="剪枝技术"></a><strong>剪枝技术</strong></h4><ul><li>深度剪枝：将层数从80 -&gt; 32层</li><li>宽度剪枝：将通道维度从28000减少到14000</li><li>结果：运行速度提高2.5x</li></ul><p>我们只希望在神经网络中保留有限数量的非0元素，使其稀疏，同时最小化损失</p><p><strong>AlexNet</strong></p><blockquote><p>AlexNet与LeNet相比，具有更深的网络结构，包含5层卷积和3层全连接，同时使用了如下三种方法改进模型的训练过程：</p><ol><li>数据增广</li><li>使用Dropout抑制过拟合</li><li>使用ReLU激活函数减少梯度消失现象</li><li><a href="https://zhuanlan.zhihu.com/p/162881214">一文读懂LeNet、AlexNet、VGG、GoogleNet、ResNet到底是什么？ - 知乎</a></li></ol></blockquote><ol><li><p>某一层的权重分布 -&gt; 大致成正态分布</p></li><li><p>剪枝，移除小的连接和小的权重  -&gt; 剪枝越多 准确性损失越多</p></li><li><p>训练剩余的权重来恢复准确率 -&gt; 剪枝后的准确率恢复了</p><ul><li>相同的剪枝比例下实现更高的准确率</li><li>权值分布变的更平滑</li></ul></li><li><p>迭代2,3过程，多做一些小步骤，以便推动剪枝过程的边界</p></li><li><p>结果：参数数量和MACs数量都减少</p></li></ol><p>​</p><blockquote><p>EIE(高效推理引擎)在稀疏和压缩的模型上直接加速</p><p>NMedia引入2-4的稀疏性</p><p>Xilinx(现在AMD的一部分)也使用稀疏性来优化其模型</p></blockquote><h4 id="剪枝的粒度"><a href="#剪枝的粒度" class="headerlink" title="剪枝的粒度"></a><strong>剪枝的粒度</strong></h4><blockquote><p>我们应该以什么模型剪枝神经网络</p><p>修剪可以在不同的粒度上执行，从结构化到非结构化</p></blockquote><p><strong>细粒度</strong></p><ul><li>灵活，可以剪掉任何位置的权重，剪枝比例更高</li><li>但很难加速，GPU对不同的线程更愿意以同步的方式进行工作，所有的线程都希望并行执行相同任务</li></ul><p><strong>粗粒度</strong></p><ul><li>剪枝一整行或者多行，可以将其压缩成一个更小的稠密矩阵进行运算，容易加速，非常规则</li><li>但是不够灵活，必须整行或者整列进行剪枝，剪枝比例比细粒度小的多</li></ul><p>讨论剪枝粒度，不仅仅是全连接层，也包括卷积层 -&gt;在卷积层的卷积核中四个维度 (给了我们更多的选择，更大的自由度来选择剪枝粒度)</p><ul><li>输入通道的数量</li><li>输出通道的数量</li><li>高度</li><li>卷积核宽度</li></ul><p><strong>细粒度剪枝</strong></p><ul><li>剪枝不规则，但是最灵活，可以达到最高的剪枝比率</li><li>只针对压缩权重而不考虑加速或并行，是最好的方法，有非常灵活的剪枝索引，获取更大的压缩比</li><li>还可以在专用硬件上提供加速（ELE）</li></ul><p><strong>原子级剪枝</strong></p><ul><li>基于模式的剪枝</li><li>旋转90度得到相同的模式，比细粒度提供更多的规则性</li><li>一个显著的模式是N对M稀疏性，比如2对4稀疏性  -&gt; 每组四个元素中，必须至少有两个零  （稀疏性为50%）<ul><li>死忠选择，需要两位来指示非零的位置和零的位置 （存储的原数据开销-&gt; 2bit用于索引）</li></ul></li></ul><p><strong>向量剪枝</strong></p><p><strong>卷积核剪枝</strong></p><p><strong>通道剪枝</strong></p><ul><li>极端情况，修剪整个通道</li><li>可以直接加速，减少了通道的数量，得到了一个通道数更小的神经网络<ul><li>不需要任何专用的硬件<ul><li>较小的压缩比，大约30%参数</li></ul></li></ul></li></ul><p>选择分配给不同层的最优稀疏性比率 -&gt; 敏感性分析</p><h4 id="剪枝的标准"><a href="#剪枝的标准" class="headerlink" title="剪枝的标准"></a><strong>剪枝的标准</strong></h4><blockquote><p>神经网络有很多权重，我们要保留哪个，剪去哪个</p><p>选择哪个神经元，哪个突触进行移除</p><p>权重、突触和神经元的标准是什么</p></blockquote><h5 id="剪枝突触"><a href="#剪枝突触" class="headerlink" title="剪枝突触"></a>剪枝突触</h5><p>最有效确定剪枝标准的方放 -&gt; 选着影响最小的</p><p><strong>基于幅度剪枝</strong></p><ul><li>使用权重的幅度来指示权重的重要性，重要性小，幅度小那么我们将其移除</li><li>想剪去矩阵的整行，可以应用L1范数或L2范数</li></ul><p><strong>基于缩放的剪枝技术</strong></p><ul><li>n个滤波器，应用一个缩放因子，将每个滤波器与一个缩放因子关联起来</li><li>这个缩放因子是可学习的（非常参数高效） -&gt; 只需要学习n个整数</li><li>将缩放因子小的滤波器移除，对缩放因子进行排序，剪枝缩放因子小的通道（滤波器和输出通道将被剪枝）<ul><li>缩放因子可以从批归一化层重用（对于批归一化，每个通道有一个缩放因子，重用批归一化的相同的缩放因子来简化计算）</li></ul></li></ul><p><strong>设计空间</strong> -&gt; <strong>如何选择方法</strong></p><ul><li>对一个剪枝的网络应用泰勒展开<ul><li>对权重w施加扰动</li><li>一级，二级，三级的近似，只保留一级，二级</li><li>《最佳脑损伤》建议忽略最后一项，剪枝已经收敛，可以忽略一级的，所以只剩下二阶项<ul><li>删除每个参数所导致的误差假设是独立的，交互项也可以忽略</li><li>只剩下一个中间项，即二阶项，用这个来确定权重是否重要</li></ul></li></ul></li></ul><h5 id="剪枝神经元"><a href="#剪枝神经元" class="headerlink" title="剪枝神经元"></a>剪枝神经元</h5><p>剪枝神经元实际上等于非常粗略的权重剪枝</p><ul><li>在线性层移除一个神经元，意味着我们删除了所有与该输出神经元相关的所有权重，即我们减少了权重矩阵的一行</li><li>在卷积层中，我们移除一些输出通道，意味着我们移除了与该通道对应的整个卷积核</li></ul><h5 id="激活剪枝"><a href="#激活剪枝" class="headerlink" title="激活剪枝"></a>激活剪枝</h5><blockquote><p>确定移除哪个激活的方法</p><p>张量不再是权重，是激活张量。是激活，不是权重，我们视图剪枝激活通道</p></blockquote><p><strong>基于零的剪枝</strong></p><ul><li><p>ReLU激活将在输出激活中产生零。</p></li><li><p>与权重的大小相似，零激活的平均百分比（APoZ）可以是用来测量神经元的重要性。</p></li><li><p>对于激活，必须真正运行一些样本，以便可以计算零的平均百分比</p></li></ul><p><strong>基于回归的剪枝</strong></p><blockquote><p>在重新训练中用最后的损失作为最终损失来进行监督，可能非常昂贵</p><p>可以最小化对应层的重建误差，进行逐层重建，只需要处理一个矩阵乘法</p><p>大型语言模型的剪枝，基本上一切都归结为矩阵乘法</p></blockquote><p>我们尝试最小化未剪枝输出张量与剪枝后输出张量之间的误差，使得优化变的局部且比使用反向椽笔跨越所有层进行监督要简单的多</p><h4 id="确定剪枝比例"><a href="#确定剪枝比例" class="headerlink" title="确定剪枝比例"></a><strong>确定剪枝比例</strong></h4><blockquote><p>如何在最大化剪枝的神经连接数量和最小化准确度损失之间选择比例</p><p>剪掉的标准是什么</p></blockquote><p> <strong>敏感性分析</strong></p><ul><li>有些层超敏感，剪掉一点精确度会下降很快</li><li>不敏感层，剪掉很多准确度也不会受到太大影响<ul><li>对每一层分别依次进行剪枝10% 20% 等等</li><li>会有多条敏感性曲线</li><li>合理性检查，检查代码问题 -&gt; 刚开始准确度应该不变，最后准确度应该会很小</li><li>没有考虑层之间的相互关系，权衡是我们不想进行太多迭代和实验<ul><li>假设每一层都是独立的，可以独立的进行每一层的敏感性分析</li></ul></li></ul></li></ul><p><strong>自动化剪枝</strong></p><blockquote><p>利用主动批评模型作为强化学习的一部分</p><p>动作是：指定每一层的压缩比</p><p>值是：当前层的维度，以及通道维度，hw高宽等</p><p>奖励是：负错误 </p><p>准确率或者错误与浮点数之间的关系大致程对数关系</p></blockquote><p>为个人学习问题设置配置</p><ul><li>状态包括：层索引（是第几层），通道数量，核大小，当前浮点运算</li><li>动作是一个连续数值，在0-1之间进行剪枝</li><li>代理是DDPG代理，如果满足约束，奖励将是负错误。<ul><li>如果不满足浮点运算约束，则奖励为负无穷大</li></ul></li></ul><p>如何微调，重训练网络，以便恢复到之前的准确性。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 机器学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> TingML </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>TinyML第0部分笔记</title>
+      <link href="/litstar/blog/27af6670.html"/>
+      <url>/litstar/blog/27af6670.html</url>
+      
+        <content type="html"><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>第0部分是前置知识，这里笔记写的太乱了，等回头来重新整理😿</p><p>另外在学习本课程的时候，偶然发现大佬只需要一天半就能看完b站24小时视频，还有相关的笔记，这就是与天才的差距吗😭😭😭</p><hr><p>致力于模型压缩和高效更深层次的计算</p><h3 id="深度学习的基础知识"><a href="#深度学习的基础知识" class="headerlink" title="深度学习的基础知识"></a>深度学习的基础知识</h3><p><strong>第二讲</strong></p><blockquote><p>大型语言模型和速度大约两年翻一倍</p><p>但是深度学习模型每两年就会增大四倍以上</p><p>促使我们通过模型压缩和加速技术来弥补这一差距</p></blockquote><p><strong>神经网路的术语</strong></p><ul><li>神经元、突触、激活、特征、重量、参数等</li></ul><p><strong>神经网络中常用的组成部分</strong></p><ul><li>全连通、卷积、分组卷积、深度卷积池、归一化、变压器</li></ul><p><strong>流行的神经网络的效率指标</strong></p><ul><li>参数，模型大小，峰值激活，MAC, FLOP, FLOPS, OP, OPS，延迟, 吞吐量</li></ul><p>神经元</p><p>例子</p><ul><li>两层神经网络并获得输出</li><li>隐藏层的维度决定模型的宽度</li><li>模型的宽度对神经网络的效率非常重要<ul><li>设计一个宽而浅的神经网络  </li><li>设计一个窄而深的神经网络</li><li>判断哪一个更准确，硬件更高效<ul><li>宽而浅效率更高 -&gt; 更全面的利用GPU中线程数量</li><li>窄而深更准确 -&gt; 通常</li></ul></li></ul></li></ul> <img src="C:/Users/17363/AppData/Roaming/Typora/typora-user-images/image-20241017230529060.png" alt="image-20241017230529060" style="zoom: 50%;" /><h3 id="流行的神经网络层"><a href="#流行的神经网络层" class="headerlink" title="流行的神经网络层"></a><strong>流行的神经网络层</strong></h3><p>Popular Neural Network Layers</p><p>神经网络层也称为  全连接层（线性层）</p><h4 id="全连接层（线性层）"><a href="#全连接层（线性层）" class="headerlink" title="全连接层（线性层）"></a><strong>全连接层（线性层）</strong></h4><p>Fully-Connected Layer (Linear Layer)</p><p>权重矩阵 维度为</p> <img src="../images/DL/线性层.png" alt="线性层" style="zoom: 33%;" /><p>张量形状</p><ul><li>输入特征C<del>i</del> </li><li>输出特征C<del>o</del></li><li>权重 W</li><li>偏差 b</li></ul><p>当我们谈论高效时，张量的维度很重要</p><p>多个输入，批量的大小为n, 如图特征图</p> <img src="../images/DL/线性层2.png" alt="线性层2" style="zoom:33%;" /><p>多个过滤器   每个过滤器与输入进行卷积并产生输出</p><p> 移动他（滑动窗口）来获得另一个输出</p><h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a><strong>卷积层</strong></h4> <img src="../images/DL/卷积层.png" alt="卷积层" style="zoom: 50%;" /><p>二维卷积  -&gt; 特征图为三维</p><p>每个XY位置，都有一个通道维度</p> <img src="../images/DL/卷积层二维.png" alt="卷积层二维" style="zoom:50%;" /><h4 id="填充"><a href="#填充" class="headerlink" title="填充"></a><strong>填充</strong></h4><p>padding</p><blockquote><p>卷积层：填充<br>填充可以用来保持输出的特性映射大小与输入特征映射的大小相同</p></blockquote><p>填充用来保持输出特征图和输入特征图相同，否则使用卷积的层数越来越深，特征图会越来越小</p> <img src="../images/DL/卷积层填充.png" alt="卷积层填充" style="zoom: 50%;" /><ul><li>零填充输入</li><li>反射填充</li><li>复制填充</li></ul><h4 id="接受域"><a href="#接受域" class="headerlink" title="接受域"></a>接受域</h4><blockquote><p>卷积层：接受域<br>在卷积中，每个输出元素都依赖于输入中的接受域。<br>每个连续的卷积都将k-1增加到接受野的大小上<br>对于L层，感受野大小为L.（k-1）1</p><p>问题：对于大型图像，我们需要为每个输出提供许多层来“看到”整个图像<br>解决方案：在神经网络内进行下采样</p></blockquote><p>图像为了有一个大的感受野，我们必须有非常深的层  -&gt; 大量的内核 也有要存储大量激活</p> <img src="../images/DL/卷积层接受域.png" alt="卷积层接受域" style="zoom:50%;" /><h4 id="跨度卷积层"><a href="#跨度卷积层" class="headerlink" title="跨度卷积层"></a>跨度卷积层</h4> <img src="../images/DL/跨步卷积层.png" alt="跨步卷积层" style="zoom:50%;" /><h4 id="分组卷积层"><a href="#分组卷积层" class="headerlink" title="分组卷积层"></a>分组卷积层</h4> <img src="../images/DL/分组卷积层.png" alt="分组卷积层" style="zoom:50%;" /><h4 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h4> <img src="../images/DL/池化层.png" alt="池化层" style="zoom:50%;" /><ul><li>将特征映射向下采样到更小的大小输出神经元在接受域的特征集中起来，类似于卷积。<ul><li>通常，步幅与内核大小相同：s&#x3D;k</li></ul></li><li>池化在每个通道上独立运行。<ul><li>没有可学习的参数</li></ul></li></ul><h4 id="归一化层"><a href="#归一化层" class="headerlink" title="归一化层"></a>归一化层</h4> <img src="../images/DL/归一化层.png" alt="归一化层" style="zoom:50%;" /><blockquote><p>将这些特性规范化可以使优化速度更快。<br>归一化层将特征归一化如下：<br>4&#x3D;∑4<br>&#x3D;二(-4)<br>6<br>u为平均值，o为像素集上的标准差（std）；<br>然后学习每个通道&#x2F;线性变换（可训练的尺度y和移位B）来进行补偿<br>因为可能丧失的表征能力。<br>y&#x3D;Y元； f</p></blockquote><h4 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h4><blockquote><p>激活函数通常是非线性函数</p></blockquote><h4 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h4><p>我们将在第12讲中了解更多关于变压器架构的信息。</p><h4 id="Transformer注意事项"><a href="#Transformer注意事项" class="headerlink" title="Transformer注意事项"></a>Transformer注意事项</h4><p>我们将在第12讲中了解更多关于变压器架构的知识<br>查询键值的设计类似于检索系统<br>以YouTube搜索为例)<br>查询：搜索栏中的文本提示符<br>关键字：视频的标题和描述<br>索菲亚<br>值：对应的视频<br>阳性的<br>乘K得到内积（用d归一化）<br>附件N）<br>马<br>然后通过Softmax得到形状N x N的注意权重<br>将注意力权重乘以V，以得到输出<br>注意（Q，</p><h3 id="效率指标"><a href="#效率指标" class="headerlink" title="效率指标"></a>效率指标</h3><p>我们应该如何衡量神经网络的效率？</p><h4 id="神经网络的效率"><a href="#神经网络的效率" class="headerlink" title="神经网络的效率"></a><strong>神经网络的效率</strong></h4><h4 id="潜伏期"><a href="#潜伏期" class="headerlink" title="潜伏期"></a><strong>潜伏期</strong></h4><p>测量特定任务的延迟</p><h4 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a><strong>吞吐量</strong></h4><p>测量数据的速率</p><h4 id="延迟vs吞吐量"><a href="#延迟vs吞吐量" class="headerlink" title="延迟vs吞吐量"></a>延迟vs吞吐量</h4><p>更高的吞吐量是否会转化为更低的延迟？为什么<br>较低的延迟是否会转化为更高的吞吐量？为什么</p><h4 id="潜伏期-1"><a href="#潜伏期-1" class="headerlink" title="潜伏期"></a>潜伏期</h4><p>延迟≈最大值<br>计算存储器<br>NN规范<br>神经网络模型中的操作次数<br>计算≈<br>处理器每秒可以处理的操作数<br>硬件规格<br>Tmemame<del>Tdata的激活移动7数据移动的权重<br>神经网络模型大小<br>NN规范<br>重量的Tdata移动处理器的内存带宽<br>硬件规格<br>输入激活大小输出激活大小NN规范<br>激活</del>的Tdata移动<br>处理器硬件的内存带宽规范</p><h4 id="能耗"><a href="#能耗" class="headerlink" title="能耗"></a>能耗</h4><p>数据移动更多的内存参考更多的能量</p><h4 id="神经网络的效率-1"><a href="#神经网络的效率-1" class="headerlink" title="神经网络的效率"></a>神经网络的效率</h4><h4 id="参数的数量（-参数）"><a href="#参数的数量（-参数）" class="headerlink" title="参数的数量（#参数）"></a>参数的数量（#参数）</h4><p>#参数是给定神经网络的参数（突触&#x2F;权重）计数，即，<br>权值张量中元素的数量。</p><h4 id="AlexNet-参数"><a href="#AlexNet-参数" class="headerlink" title="AlexNet: # 参数"></a>AlexNet: # 参数</h4><h4 id="型号尺寸"><a href="#型号尺寸" class="headerlink" title="型号尺寸"></a>型号尺寸</h4><p>模型大小测量给定神经网络的权值的存储。<br>模型大小的通用单位有：MB（兆字节）、KB（千字节）、位。<br>一般来说，如果整个神经网络使用相同的数据类型（例如，浮点数据），<br>·模型尺寸&#x3D;#参数·位的宽度<br>示例： AlexNet有61M个参数。<br>如果所有权重都存储32位数字，总存储将大约<br>·61M×4字节（32位）&#x3D;244MB（244×106字节）<br>如果所有的权重都用8位数字存储，总存储空间将是大约<br>·61M×1Byte (8bits)&#x3D;61MB</p><h4 id="浮点运算数（FLOP）"><a href="#浮点运算数（FLOP）" class="headerlink" title="浮点运算数（FLOP）"></a>浮点运算数（FLOP）</h4><p>乘法运算是一个浮点运算<br>添加是一个浮点操作<br>一个乘法累加运算是两个浮点运算（FLOP）<br>示例： AlexNet有7个24M的mac，浮点操作的总数将为<br>·724M×2&#x3D;1.4G流体<br>每秒浮点运算（故障）<br>失败<br>失败的&#x3D;<br>第二</p><h4 id="操作次数（OP）"><a href="#操作次数（OP）" class="headerlink" title="操作次数（OP）"></a>操作次数（OP）</h4><p>神经网络计算中的激活&#x2F;权值并不总是浮点式的。<br>为了推广，使用操作数来测量计算量。<br>例如： AlexNet有7.24亿mac，操作总数将为<br>·724M×2&#x3D;1.4GOPs<br>类似地，每秒操作（OPS）<br>OP<br>.OPS&#x3D;<br>第二</p><h3 id="今天讲座总结"><a href="#今天讲座总结" class="headerlink" title="今天讲座总结"></a>今天讲座总结</h3><p>在这次演讲中，我们<br>回顾了神经网络的基础知识<br>术语：神经元输出→激活，突触→权重<br>流行的层：全连接，卷积，深度层<br>卷积、池化、规范化<br>介绍了神经网络的效率指标<br>内存成本：#参数，型号大小，#激活情况<br>计算成本：mac，FLOP失败。OP OPS</p><p><strong>实验0：关于PyTorch和实验练习的教程</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 机器学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> TingML </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>动手学深度学习V2</title>
+      <link href="/litstar/blog/9aaf6e2.html"/>
+      <url>/litstar/blog/9aaf6e2.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="深度学习介绍"><a href="#深度学习介绍" class="headerlink" title="深度学习介绍"></a>深度学习介绍</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><style>  .ascii-box {    font-family: 'Courier New', monospace;    white-space: pre;    background: #fff;    padding: 12px;    border-radius: 8px;    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);    margin: 20px auto;    max-width: 320px;    line-height: 1.3;  }  .highlight {    color: #e74c3c;    font-weight: 600;  }</style><div class="ascii-box">／￣￣￣￣＼ |　乀 　√ \　／￣￣￣￣﹉￣＼|　 👁 👁 | | 妈耶，李沐的 \ \　 / 👄\ / ∠ <span class="highlight">动手学深度学习!</span> /  ＼　　 イ 　 \ ______ /  ／　　 　\ /　|　　　 \|　|　　　 |   |</div><p><strong>学习深度学习关键是动手</strong></p><ul><li>深度学习是人工智能最热的领域</li><li>核心是神经网络</li><li>神经网络是一门语言</li><li>应该像学习Python&#x2F;C++一样学习深度学习</li></ul><p>中文网页书</p><ul><li><a href="https://zh.d2l.ai/chapter_preface/index.html">前言 — 动手学深度学习 2.0.0 documentation (d2l.ai)</a></li></ul><p>Github项目</p><ul><li><a href="https://github.com/d2l-ai/d2l-zh">d2l-ai&#x2F;d2l-zh: 《动手学深度学习》：面向中文读者、能运行、可讨论。中英文版被70多个国家的500多所大学用于教学。 (github.com)</a></li></ul><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>介绍深度学习经典和最新模型</p><ul><li>LeNet,ResNet,LSTM,BERT,..</li></ul><p>机器学习基础</p><ul><li>损失函数、目标函数、过拟合、优化</li></ul><p>实践</p><ul><li><p>使用Pytorch实现介绍的知识点</p></li><li><p>在真实数据上体验算法效果</p></li></ul><p>内容</p><ul><li>深度学习基础一线性神经网络，多层感知机</li><li>卷积神经网络一LeNet,AlexNet,.VGG,Inception,ResNet   （空间）</li><li>循环神经网络一RNN,GRU,LSTM,Seq2seq   （时间）</li><li>注意力制-Attention, Transformer</li><li>优化算法一SGD,Momentum,Adam</li><li>高性能计算一并行，多GPU,分布式</li><li>计算机视觉一目标检测，语义分割</li><li>自然语言处理一词嵌入，BERT</li></ul> <img src="C:/Users/17363/AppData/Roaming/Typora/typora-user-images/image-20241010170003894.png" alt="image-20241010170003894" style="zoom:50%;" /><p>图片分类、物体检测和分割、样式迁移、人脸合成、文字生成图片、文字生成、五人驾驶</p> <img src="C:/Users/17363/AppData/Roaming/Typora/typora-user-images/image-20241010170419510.png" alt="image-20241010170419510" style="zoom:50%;" /><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装miniconda&#x2F;conda后</p><p><code>conda env remove d2l-zh</code>   删除原本的d21-zh环境<br><code>conda create -n d2l-zh python=3.8 pip</code> 创建新的d21-zh环境<br><code>conda activate d2l-zh</code> 激活d21-zh环境</p><p>安装需要的包  注意换镜像源<br><code>pip install jupyter d2l torch torchvision</code></p><p>Windows 下载资料</p><p><a href="https://zh.d2l.ai/chapter_installation/index.html">安装 — 动手学深度学习 2.0.0 documentation (d2l.ai)</a></p><h2 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h2><p><strong>N维数组是机器学习和神经网络的主要数据结构</strong></p><p>2d：一行一个样本，一列一个特征</p><p>3d：RGB团偏（宽 高 通道）</p><p>4d：一个RGB图片的批量 一次读取128张图片</p><p>5d：一个视频批量  （多了时间）</p><p><strong>创建数组</strong></p><ul><li>形状  -&gt; 3*4 矩阵</li><li>数据类型  -&gt; 浮点数等</li><li>元素的值</li></ul><p><strong>访问元素</strong></p><p>一行 [1, : ]   一列[: ,1]   [l:r:step] 左闭右开</p><hr><p><strong>因为涉及到代码的运行，接下来的笔记在Jupyter中写，放在github库中</strong></p><p>笔记链接：<a href="https://github.com/xx1902/d2l">xx1902&#x2F;d2l: 动手学深度学习v2 (github.com)</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 深度学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>private</title>
+      <link href="/litstar/blog/8d86dbc1.html"/>
+      <url>/litstar/blog/8d86dbc1.html</url>
+      
+        <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试." data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容.">  <script id="hbeData" type="hbeData" data-hmacdigest="283692e7d44ea339405428a33213b6749dc7104f7d2e14b48f119bf6a3636763">4630436162ade97ba2718b7d0c4b3b6351ade09e539dfebeb5402828e29e64b0ff2afaee696a497a27f328da1fbaed450247c577c76bd9aeac7923df690dbf86ee13ae410993158bb0ee508c941fa18a1ebcd275c361c9f321a25934ad9f01d012e1a577483136154cf6c21cc2fcaa8d97eb82b5c99a4c3a0f2a4db8730c9f95c47ce8d94290b269c3e2518bb532200e2ea88a020fdecf2dc1f023cdccad283522cb2cc595804b3748281b705e9842dc50829b9b0c29ecf48cbe9173172a0c8d2a24915953b4fc58c9c639c10dd77aa9486b1f71cde5609331be0ceecded28f3c4945c5a60d8ce523a58d786a9035c06dc7bae92374afd3ab5294cb663cf3488c660619539804f19cf28f0f1e76cc0e42a0d10a5cbd3ae5eff2db194c806f52533834f032d25498734d9df5d983d2d61</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-up">      <input class="hbe hbe-input-field hbe-input-field-up" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-up" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-up">您好, 这里需要密码.</span>      </label>    </div>  </div></div><script data-pjax src="/litstar/lib/hbe.js"></script><link href="/litstar/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> private </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>为什么要写blog</title>
+      <link href="/litstar/blog/4a17b156.html"/>
+      <url>/litstar/blog/4a17b156.html</url>
+      
+        <content type="html"><![CDATA[<hr><p>2025.5.15 过了小一年，依旧懒惰，但是我真的要开始哩（</p><hr><p>2024.9.28</p><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>前一段时间刚刚参与了助学导师 <del>为爱发电</del> 看到一群群刚从高中跑出来到处问问题的小白，朝气蓬勃的， 才发现自己不知不觉已经成为 <del>老登</del> 老白了。到了大学最焦虑的大三，回头望去自己经历了很多也学了很多，班长，学委，科协，暑期优秀团队，acm，q机器人，数学建模，大创，课设 <del>无头苍蝇到处乱撞</del> …… </p><ul><li>大一是无忧无虑的</li><li>大二是忙忙碌碌的</li><li>大三是<del>浑浑噩噩的</del> ？</li><li>大四是 （ ？</li></ul><p>不知道现在该学什么的我，找了我的老部长xc交流 <del>老迷妹了</del>，和我说了很多很多，当时说整理，到现在还没整理（悲   <del>我一定会整理的</del></p> <img src="../images/article/xc建议.png" alt="alt text" style="zoom: 33%;" /><p>最终产生了这篇文章  <del>属于亚马孙的蝴蝶效应了</del></p><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>前两天参与写的 <a href="https://github.com/Avoidman2233/GUIDE-FOR-FRESHMAN-IN-Hohai-University">《hhu盗版指南》</a>再次让我体验到写文章的 <del>快乐</del> ，很耗时间 但是 写完确实很充实，大三老年人还有时间吗， <del>好想回到高考后（bushi</del></p><p>经过两天的搭建和美化，Hexo + github +zeabur部署，小站终于暂时能看了<del>（虽然还有很多bug</del>，原本第一篇文章想写 如何搭建的，等以后有时间再写吧<del>（我有拖延症</del></p><p>接下来就在此站记录以后我的项目了，以此为证（）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 随笔 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 随笔 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
